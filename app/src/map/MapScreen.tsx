@@ -13,7 +13,7 @@ import { KIND_ICONS, type MapMarker } from './GuideMap';
 
 const GuideMap = lazy(() => import('./GuideMap'));
 
-const CHIPS: DestKind[] = ['toilet', 'wudu', 'water', 'gate', 'hotel', 'haram', 'clinic'];
+const CHIPS: DestKind[] = ['toilet', 'wudu', 'water', 'tea', 'food', 'gate', 'hotel', 'haram', 'clinic'];
 const CENTERS = { makkah: { lat: 21.42251, lng: 39.82616 }, madinah: { lat: 24.46723, lng: 39.61110 } };
 
 function TurnIcon({ turn, size = 56 }: { turn: Turn; size?: number }) {
@@ -23,7 +23,7 @@ function TurnIcon({ turn, size = 56 }: { turn: Turn; size?: number }) {
   return <ArrowUp size={size} strokeWidth={2.4} />;
 }
 
-export function MapScreen({ initialKind }: { initialKind?: string }) {
+export function MapScreen({ initialKind, autoGo = false }: { initialKind?: string; autoGo?: boolean }) {
   const { t, lang } = usePrefs();
   const { pos, heading, hotels, place, source, setDemo } = useLocation();
   const [kind, setKind] = useState<DestKind>((CHIPS as string[]).includes(initialKind ?? '') ? (initialKind as DestKind) : 'toilet');
@@ -64,6 +64,10 @@ export function MapScreen({ initialKind }: { initialKind?: string }) {
     walkingRoute(pos, dest).then((r) => alive && setRoute(r));
     return () => { alive = false; };
   }, [dest?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Arriving from Ask ("চলুন"): start guidance as soon as the route is ready.
+  const autoStarted = useRef(false);
+  useEffect(() => { if (autoGo && route && !autoStarted.current) { autoStarted.current = true; setGuiding(true); setFollow(true); } }, [autoGo, route]);
 
   const prog = route && pos ? progressOn(route, pos.lat, pos.lng) : null;
   const arrived = !!(guiding && dest && pos && distanceM(pos.lat, pos.lng, dest.lat, dest.lng) < 15);
@@ -178,9 +182,12 @@ export function MapScreen({ initialKind }: { initialKind?: string }) {
         {guiding && prog ? (
           <div className="flex items-center gap-4">
             <div className="flex-1">
-              <p className="num text-[2rem] font-bold leading-none">{arrived ? '—' : `${num(prog.remaining, lang)} ${t('মি.', 'm')}`}</p>
+              <p className="num whitespace-nowrap text-[1.7rem] font-bold leading-none">{arrived ? '—' : `${num(prog.remaining, lang)} ${t('মি.', 'm')}`}</p>
               <p className="mt-1 text-ink-2">{arrived ? t('আলহামদুলিল্লাহ', 'Alhamdulillah') : t(`প্রায় ${num(walkMinutes(prog.remaining), 'bn')} মিনিট হাঁটা`, `About ${walkMinutes(prog.remaining)} min walk`)}</p>
             </div>
+            {source === 'demo' && !arrived && (
+              <button onClick={demoWalk} aria-label={t('ডেমো হাঁটা', 'Demo walk')} className="grid size-14 place-items-center rounded-full bg-surface-2"><Footprints size={24} /></button>
+            )}
             <button onClick={() => setVoice(!voice)} aria-label={voice ? t('শব্দ বন্ধ', 'Mute') : t('শব্দ চালু', 'Unmute')} className="grid size-14 place-items-center rounded-full bg-surface-2">
               {voice ? <Volume2 size={26} /> : <VolumeX size={26} />}
             </button>
@@ -229,7 +236,7 @@ export function MapScreen({ initialKind }: { initialKind?: string }) {
                 </button>
               )}
             </div>
-            {route?.offline && <p className="mt-2 text-center text-[0.9rem] text-ink-2">{t('অফলাইন: তীর দেখে সোজা চলুন', 'Offline: follow the arrow')}</p>}
+            {route?.offline && <p className="mt-2 text-center text-[0.9rem] text-ink-2">{t('খোলা চত্বর: তীর দেখে সোজা চলুন', 'Open plaza: follow the arrow')}</p>}
           </>
         )}
       </section>

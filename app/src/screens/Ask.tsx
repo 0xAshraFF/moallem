@@ -4,6 +4,14 @@ import { nextNotice, useGroup, type NoticeKind } from '../lib/group';
 import { noticeSentence } from './Group';
 import { useTrip } from '../lib/trip';
 import { answerTripQuestion } from '../domain/itinerary';
+import { whereIntent } from '../domain/whereIntent';
+import { kindLabel, type DestKind } from '../domain/pois';
+import { nearestDest } from '../lib/nearestDest';
+import { useLocation } from '../lib/location';
+import { go } from '../lib/router';
+import { num as fmtNum } from '../lib/format';
+import { KIND_ICONS } from '../map/GuideMap';
+import { Navigation } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import type { ComponentType } from 'react';
@@ -45,7 +53,8 @@ export function Ask() {
   const { t, lang } = usePrefs();
   const [text, setText] = useState('');
   const [listening, setListening] = useState(false);
-  const [reply, setReply] = useState<{ q: string; a: string } | null>(null);
+  const [reply, setReply] = useState<{ q: string; a: string; place?: { kind: DestKind; label: string; m: number; min: number } } | null>(null);
+  const loc = useLocation();
   const [card, setCard] = useState<Need | null>(null);
   const rec = useRef<Rec | null>(null);
   const { mine } = useGroup();
@@ -73,6 +82,22 @@ export function Ask() {
 
   const ask = async (q: string) => {
     if (!q.trim()) return;
+    setTimeout(() => document.getElementById('ask-reply')?.scrollIntoView({ behavior: 'smooth', block: 'end' }), 80);
+    // "চা কোথায় পাবো?" → nearest place + a Go button that starts guidance.
+    const want = whereIntent(q);
+    if (want && loc.pos) {
+      const hit = nearestDest(want, loc.pos, loc.hotels);
+      const kl = kindLabel(want);
+      if (hit) {
+        const label = t(hit.d.labelBn, hit.d.labelEn);
+        const out = want === 'hotel'
+          ? t(`আপনার হোটেল ${fmtNum(hit.m, 'bn')} মিটার দূরে, প্রায় ${fmtNum(hit.min, 'bn')} মিনিট হাঁটা। চলুন, পথ দেখাই।`, `Your hotel is ${hit.m} m away, about ${hit.min} min walk. Tap Go and I'll guide you.`)
+          : t(`সবচেয়ে কাছের ${kl.bn} ${fmtNum(hit.m, 'bn')} মিটার দূরে, প্রায় ${fmtNum(hit.min, 'bn')} মিনিট হাঁটা। চলুন, পথ দেখাই।`, `The nearest ${kl.en.toLowerCase()} is ${hit.m} m away, about ${hit.min} min walk. Tap Go and I'll guide you.`);
+        setReply({ q, a: out, place: { kind: want, label, m: hit.m, min: hit.min } }); setText(''); speak(out, lang); return;
+      }
+      const none = t(`কাছে ${kl.bn} ম্যাপে নেই। আপনার মোয়াল্লেমকে জিজ্ঞেস করুন, বা কেউ জানলে ম্যাপে যোগ করুন।`, `No ${kl.en.toLowerCase()} on the map nearby. Ask your Moallem.`);
+      setReply({ q, a: none }); setText(''); speak(none, lang); return;
+    }
     const fromMoallem = fromNotices(q);
     if (fromMoallem) { setReply({ q, a: fromMoallem }); setText(''); speak(fromMoallem, lang); return; }
     const fromTrip = trip.itinerary ? answerTripQuestion(trip.itinerary, q, trip.today) : null;
@@ -152,12 +177,25 @@ export function Ask() {
       </form>
 
       {reply && (
-        <section className="card mx-4 mt-4 p-5" aria-live="polite">
+        <section id="ask-reply" className="card mx-4 mt-4 scroll-mb-32 p-5" aria-live="polite">
           <p className="text-[0.95rem] text-ink-2">“{reply.q}”</p>
           <p className="mt-2 text-[1.12rem] leading-relaxed">{reply.a}</p>
-          <button onClick={() => speak(reply.a, lang)} className="mt-3 inline-flex min-h-11 items-center gap-2 rounded-full bg-primary-soft px-4 font-semibold text-primary">
-            <Volume2 size={20} /> {t('আবার শুনুন', 'Hear again')}
-          </button>
+          {reply.place && (() => { const PIcon = KIND_ICONS[reply.place.kind]; return (
+            <div className="mt-4 flex items-center gap-3 rounded-2xl bg-surface-2 p-3">
+              <span className="grid size-12 place-items-center rounded-full bg-medal text-brass"><PIcon size={24} /></span>
+              <span className="min-w-0 flex-1"><b className="block truncate">{reply.place.label}</b>
+                <span className="num text-ink-2">{fmtNum(reply.place.m, lang)} {t('মি.', 'm')} · {fmtNum(reply.place.min, lang)} {t('মিনিট', 'min')}</span></span>
+            </div>); })()}
+          <div className="mt-3 flex flex-wrap gap-2">
+            {reply.place && (
+              <button onClick={() => go(`/map/${reply.place!.kind}/go`)} className="inline-flex min-h-14 flex-1 items-center justify-center gap-2 rounded-2xl bg-primary px-5 text-[1.15rem] font-bold text-on-primary">
+                <Navigation size={22} /> {t('চলুন', 'Go')}
+              </button>
+            )}
+            <button onClick={() => speak(reply.a, lang)} className="inline-flex min-h-14 items-center gap-2 rounded-2xl bg-primary-soft px-4 font-semibold text-primary">
+              <Volume2 size={20} /> {t('আবার শুনুন', 'Hear again')}
+            </button>
+          </div>
         </section>
       )}
 

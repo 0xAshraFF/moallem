@@ -93,7 +93,7 @@ export default function App() {
   const screen = (() => {
     switch (route) {
       case 'steps': return <Steps />;
-      case 'map': return <MapScreen initialKind={sub} />;
+      case 'map': return <MapScreen initialKind={sub} autoGo={parts[2] === 'go'} />;
       case 'group': return <Group />;
       case 'tawaf': return <Counter key="tawaf" kind="tawaf" />;
       case 'sai': return <Counter key="sai" kind="sai" />;

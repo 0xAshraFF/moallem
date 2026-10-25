@@ -2,7 +2,7 @@
 import data from './pois.json';
 import { distanceM } from './geo';
 
-export type PoiKind = 'gate' | 'toilet' | 'wudu' | 'water' | 'clinic' | 'pharmacy' | 'station' | 'bus';
+export type PoiKind = 'gate' | 'toilet' | 'wudu' | 'water' | 'tea' | 'food' | 'clinic' | 'pharmacy' | 'station' | 'bus';
 export type DestKind = PoiKind | 'hotel' | 'haram';
 
 export interface Poi {
@@ -29,11 +29,11 @@ export const POIS = (data as { pois: Poi[] }).pois;
 export const POI_SOURCE = (data as { source: string }).source;
 
 const KIND_BN: Record<DestKind, string> = {
-  gate: 'গেট', toilet: 'টয়লেট', wudu: 'ওযুখানা', water: 'পানি', clinic: 'ক্লিনিক', pharmacy: 'ফার্মেসি',
+  gate: 'গেট', toilet: 'টয়লেট', wudu: 'ওযুখানা', water: 'পানি', tea: 'চা', food: 'খাবার', clinic: 'ক্লিনিক', pharmacy: 'ফার্মেসি',
   station: 'ট্রেন স্টেশন', bus: 'বাস স্টপ', hotel: 'হোটেল', haram: 'হারাম',
 };
 const KIND_EN: Record<DestKind, string> = {
-  gate: 'Gate', toilet: 'Toilet', wudu: 'Wudu', water: 'Water', clinic: 'Clinic', pharmacy: 'Pharmacy',
+  gate: 'Gate', toilet: 'Toilet', wudu: 'Wudu', water: 'Water', tea: 'Tea', food: 'Food', clinic: 'Clinic', pharmacy: 'Pharmacy',
   station: 'Station', bus: 'Bus stop', hotel: 'Hotel', haram: 'Haram',
 };
 
@@ -41,6 +41,8 @@ const bnNum = (s: string) => s.replace(/[0-9]/g, (d) => '০১২৩৪৫৬�
 
 export function poiLabel(p: Poi): { bn: string; en: string } {
   if (p.kind === 'gate' && p.ref) return { bn: `গেট ${bnNum(p.ref)}`, en: `Gate ${p.ref}` };
+  if (p.kind === 'tea') return { bn: 'চায়ের দোকান', en: p.nameEn ?? 'Tea stall' };
+  if (p.kind === 'food') return { bn: 'খাবারের দোকান', en: p.nameEn ?? 'Restaurant' };
   return { bn: KIND_BN[p.kind], en: p.nameEn ?? KIND_EN[p.kind] };
 }
 

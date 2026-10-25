@@ -2,7 +2,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { useEffect, useRef } from 'react';
-import { Accessibility, Bus, Cross, DoorOpen, Droplets, GlassWater, Hotel, Pill, Toilet, TrainFront } from 'lucide-react';
+import { Accessibility, Bus, Coffee, Cross, DoorOpen, Droplets, GlassWater, Hotel, Pill, Toilet, TrainFront, Utensils } from 'lucide-react';
 import type { ComponentType } from 'react';
 import type { LucideProps } from 'lucide-react';
 import { KaabaIcon } from '../ui/icons';
@@ -11,7 +11,7 @@ import type { DestKind } from '../domain/pois';
 export interface MapMarker { id: string; kind: DestKind; lat: number; lng: number; label: string; selected?: boolean }
 
 const KIND_ICON: Record<DestKind, ComponentType<LucideProps>> = {
-  gate: DoorOpen, toilet: Toilet, wudu: Droplets, water: GlassWater, clinic: Cross, pharmacy: Pill,
+  gate: DoorOpen, toilet: Toilet, wudu: Droplets, water: GlassWater, tea: Coffee, food: Utensils, clinic: Cross, pharmacy: Pill,
   station: TrainFront, bus: Bus, hotel: Hotel, haram: KaabaIcon,
 };
 export const KIND_ICONS = KIND_ICON;

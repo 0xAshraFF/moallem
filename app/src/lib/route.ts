@@ -43,6 +43,10 @@ export async function walkingRoute(from: { lat: number; lng: number }, to: { lat
     };
     // The router snaps to streets; finish the last metres straight to the door.
     route.points.push([to.lat, to.lng]);
+    // Open plazas around the Haram aren't in the street network, so the router detours
+    // around the mosque. When that detour is far longer than walking straight across, guide by arrow.
+    const straight = distanceM(from.lat, from.lng, to.lat, to.lng);
+    if (route.distance > Math.max(straight * 2.5, straight + 400) && straight < 800) throw new Error('detour');
     cache.set(key, route);
     return route;
   } catch {
