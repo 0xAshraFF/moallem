@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="bn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#1E5B3F" />
+    <meta name="description" content="মোয়াল্লেম — আপনার হজের সাথী" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Playfair+Display:wght@500;600&family=Noto+Naskh+Arabic:wght@700&family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Sans:wght@400;600;700&family=Tiro+Bangla&display=swap"
+      rel="stylesheet"
+    />
+    <title>মোয়াল্লেম</title>
+    <script>
+      // Apply saved theme before paint to avoid a flash.
+      try {
+        var p = JSON.parse(localStorage.getItem('moallem.prefs') || '{}');
+        if (p.theme === 'dark' || p.theme === 'light') document.documentElement.dataset.theme = p.theme;
+        if (p.scale) document.documentElement.style.setProperty('--scale', p.scale);
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

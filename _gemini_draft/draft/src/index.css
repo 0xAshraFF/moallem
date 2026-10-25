@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-bangla: 'Hind Siliguri', 'Plus Jakarta Sans', 'Amiri', system-ui, -apple-system, sans-serif;
+    --font-display: 'Plus Jakarta Sans', 'Hind Siliguri', 'Amiri', system-ui, -apple-system, sans-serif;
+    --font-arabic: 'Amiri', 'Hind Siliguri', serif;
+    --font-mono: 'JetBrains Mono', 'Hind Siliguri', 'Plus Jakarta Sans', 'Amiri', monospace;
+  }
+
+  body {
+    font-family: var(--font-bangla);
+    background-color: #EEF0ED;
+    color: #111315;
+    line-height: 1.6;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-bangla);
+    text-wrap: balance;
+  }
+}
+
+.font-arabic {
+  font-family: var(--font-arabic);
+  line-height: 1.95;
+}
+
+.font-mono-tabular {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Custom high-contrast scrollbar for outdoor visibility */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #E2E6E1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #12A839;
+  border-radius: 3px;
+}

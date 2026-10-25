@@ -1,0 +1,13 @@
+node_modules/
+dist/
+out/
+.env
+.env.*
+!.env.example
+.gstack/
+*.log
+_gemini_draft/moallem-ai-studio.zip
+_gemini_draft/**/*.zip
+_gemini_draft/draft/.aistudio/
+video-assets/
+.claude/settings.local.json

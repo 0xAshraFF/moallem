@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <rect width="512" height="512" rx="112" fill="#064E3B"/>
+  <rect x="44" y="44" width="424" height="424" rx="84" stroke="#D97706" stroke-width="8" stroke-opacity="0.45"/>
+  <!-- Stylized Kaaba & Haramain Arch -->
+  <path d="M136 168L256 120L376 168V368H136V168Z" fill="#111827" stroke="#D97706" stroke-width="10" stroke-linejoin="round"/>
+  <!-- Golden Kiswah Hizam Band -->
+  <path d="M136 218H376V248H136V218Z" fill="#D97706"/>
+  <path d="M156 233H210M236 233H276M302 233H356" stroke="#064E3B" stroke-width="6" stroke-linecap="round"/>
+  <!-- Kaaba Door (Multazam) -->
+  <rect x="278" y="274" width="48" height="76" rx="6" fill="#D97706"/>
+  <!-- Crescent & Compass Star -->
+  <circle cx="256" cy="86" r="14" fill="#F59E0B"/>
+  <!-- Bangla Letter ম (Moallem) Badge -->
+  <circle cx="196" cy="312" r="28" fill="#064E3B" stroke="#D97706" stroke-width="5"/>
+  <text x="196" y="324" text-anchor="middle" fill="#FFFFFF" font-family="sans-serif" font-size="34" font-weight="bold">ম</text>
+</svg>
