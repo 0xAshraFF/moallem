@@ -1,54 +1,28 @@
-# Remotion video
+# Moallem product films
 
-<p align="center">
-  <a href="https://github.com/remotion-dev/logo">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://github.com/remotion-dev/logo/raw/main/animated-logo-banner-dark.apng">
-      <img alt="Animated Remotion Logo" src="https://github.com/remotion-dev/logo/raw/main/animated-logo-banner-light.gif">
-    </picture>
-  </a>
-</p>
+Remotion project for the Moallem product films (1920×1080).
 
-Welcome to your Remotion project!
+| Composition | Source | Notes |
+|---|---|---|
+| `MoallemFilm2` | `src/v2/` | Built from real app recordings in `public/rec` |
+| `MoallemFilm` | `src/` | First film, built from stills in `public/screens` |
 
 ## Commands
 
-**Install Dependencies**
-
-```console
-npm i --loglevel=error
+```bash
+npm install
+npx remotion studio                                       # preview
+npx remotion render MoallemFilm2 out/moallem-film-v2.mp4  # export
 ```
 
-**Start Preview**
+## Re-recording the app
 
-```console
-npm run dev
+The scripts drive the running app with a headless browser, so start it first
+(`cd ../app && npm run dev`, serves `http://localhost:8787`). `record.mjs` also needs `ffmpeg` on PATH.
+
+```bash
+node scripts/record.mjs public/rec [flowName...]       # screen recordings (MP4, 30 fps)
+node scripts/shoot.mjs <outDir> scripts/now.json        # screenshots from a shot list
 ```
 
-**Render video**
-
-```console
-npx remotion render
-```
-
-**Upgrade Remotion**
-
-```console
-npx remotion upgrade
-```
-
-## Docs
-
-Get started with Remotion by reading the [fundamentals page](https://www.remotion.dev/docs/the-fundamentals).
-
-## Help
-
-We provide help on our [Discord server](https://discord.gg/6VzzNDwUwV).
-
-## Issues
-
-Found an issue with Remotion? [File an issue here](https://github.com/remotion-dev/remotion/issues/new).
-
-## License
-
-Note that for some entities a company license is needed. [Read the terms here](https://github.com/remotion-dev/remotion/blob/main/LICENSE.md).
+Rendered films go to `out/`, which is git-ignored.
