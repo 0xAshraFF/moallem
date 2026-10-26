@@ -11,3 +11,7 @@ _gemini_draft/**/*.zip
 _gemini_draft/draft/.aistudio/
 video-assets/
 .claude/settings.local.json
+
+# Kept locally, not published
+_gemini_draft/
+.claude/skills/

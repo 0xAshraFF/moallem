@@ -102,10 +102,9 @@ moallem/
 │   ├── public/              recordings, screenshots, photos, audio
 │   └── scripts/             record / shoot the running app with a browser
 ├── shared/images/           Wikimedia Commons photos + CREDITS.json (credited in-app)
-├── docs/
-│   ├── PLAN.md              product plan and team-review decisions
-│   └── screenshots/
-└── _gemini_draft/           earlier AI Studio draft, kept for reference only
+└── docs/
+    ├── PLAN.md              product plan and team-review decisions
+    └── screenshots/
 ```
 
 ## Product film
